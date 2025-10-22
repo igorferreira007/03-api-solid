@@ -1,7 +1,24 @@
-import { register } from "./http/controllers/register.ts"
+import { ZodError, z } from "zod"
 import { appRoutes } from "./http/routes.ts"
 import fastify from "fastify"
+import { env } from "./env/index.ts"
 
 export const app = fastify()
 
 app.register(appRoutes)
+
+app.setErrorHandler((error, _, reply) => {
+  if (error instanceof ZodError) {
+    return reply
+      .status(400)
+      .send({ message: "Validation error.", issues: z.treeifyError(error) })
+  }
+
+  if (env.NODE_ENV !== "production") {
+    console.error(error)
+  } else {
+    // TODO: Aqui nos devemos criar um log para uma ferramenta externa
+  }
+
+  return reply.status(500).send({ message: "Internal server error." })
+})
