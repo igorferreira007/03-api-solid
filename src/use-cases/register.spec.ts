@@ -4,10 +4,10 @@ import { RegisterUseCase } from "./register.ts"
 import { beforeEach, describe, expect, it } from "vitest"
 import { compare } from "bcryptjs"
 
-describe("Register Use Case", () => {
-  let usersRepository: InMemoryUsersRepository
-  let sut: RegisterUseCase
+let usersRepository: InMemoryUsersRepository
+let sut: RegisterUseCase
 
+describe("Register Use Case", () => {
   beforeEach(() => {
     usersRepository = new InMemoryUsersRepository()
     sut = new RegisterUseCase(usersRepository)
